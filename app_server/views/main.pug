@@ -1,0 +1,88 @@
+link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css' rel='stylesheet')
+link(rel='stylesheet' href='https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js')
+script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+// ---- Include the above in your HEAD tag --------
+
+.container.mb-4
+  // Top Navigation Bar
+  nav.navbar.navbar-light.bg-light
+    .container
+      .d-flex.align-items-center
+        // Left Buttons with Icons
+        .btn-group
+          a.btn.btn-outline-secondary(href='about' role='button')
+            i.fas.fa-home
+          a.btn.btn-outline-secondary(href='beans' role='button')
+            i.fas.fa-user
+
+        // Centered Title
+        h1.ml-auto.text-danger.text-center Rods and Rotors
+
+  .row
+    .col-12.col-sm-12.col-md-6.col-lg-4.col-xl-4.mt-4
+      .card.shadow
+        .card-body.text-center
+          h3.text-warning SALE 50% OFF
+          a(href='#')
+            img.card-img-top(src='https://images.pexels.com/photos/2078268/pexels-photo-2078268.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' alt='')
+          .text-warning
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.far.fa-star
+          a.text-reset(href='#')
+            h3.card-title.display-4 viverra
+          h6
+            | $199.99
+            del.text-muted.ml-2 $399.99
+          a.btn.btn-dark.my-2(href='#' role='button') Add to Cart
+    .col-12.col-sm-12.col-md-6.col-lg-4.col-xl-4.mt-4
+      .card.shadow
+        .card-body.text-center
+          h3.text-warning SALE 50% OFF
+          a(href='#')
+            img.card-img-top(src='https://images.pexels.com/photos/1374128/pexels-photo-1374128.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' alt='')
+          .text-warning
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.far.fa-star
+          a.text-reset(href='#')
+            h3.card-title.display-4 faucibus
+          h6
+            | $199.99
+            del.text-muted.ml-2 $399.99
+          a.btn.btn-dark.my-2(href='#' role='button') Add to Cart
+    .col-12.col-sm-12.col-md-6.col-lg-4.col-xl-4.mt-4
+      .card.shadow
+        .card-body.text-center
+          h3.text-warning SALE 50% OFF
+          a(href='#')
+            img.card-img-top(src='https://images.pexels.com/photos/2783873/pexels-photo-2783873.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260' alt='')
+          .text-warning
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.fas.fa-star
+            i.far.fa-star
+          a.text-reset(href='#')
+            h3.card-title.display-4 tincidunt
+          h6
+            | $199.99
+            del.text-muted.ml-2 $399.99
+          a.btn.btn-dark.my-2(href='#' role='button') Add to Cart
+
+// FontAwesome for icons
+script(src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous')
+
+// Add custom styles for buttons
+style.
+  .btn {
+    padding: 10px 15px;
+  }
+  .btn i {
+    font-size: 1.5em; // Increase icon size
+  }
