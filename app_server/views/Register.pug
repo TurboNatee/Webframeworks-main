@@ -1,0 +1,114 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css', rel='stylesheet')
+        link(rel='stylesheet', href='https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css')
+        script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+        script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js')
+        style.
+            body {
+                position: relative;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+            .background-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                overflow: hidden;
+            }
+            .background-image {
+                width: 100%;
+                height: 100%;
+                background-image: url('/background/background.jpg');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: blur(5px);
+            }
+            .background-overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .navbar {
+                background-color: rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+                padding: 1rem 2rem;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                position: relative;
+                z-index: 1;
+            }
+            .title {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                color: #dc3545;
+                font-size: 2rem;
+                z-index: 2;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                white-space: nowrap;
+            }
+            .btn {
+                padding: 10px 15px;
+                color: white;
+            }
+            .form-container {
+                position: relative;
+                z-index: 2;
+                max-width: 400px;
+                margin: auto;
+                padding: 2rem;
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            }
+            h1 {
+                text-align: center;
+                margin-bottom: 1.5rem;
+                color: #343a40;
+            }
+            label {
+                color: #343a40;
+            }
+
+    body
+        .background-container
+            .background-image
+            .background-overlay
+
+        // Top Navigation Bar
+        nav.navbar.navbar-expand-lg.navbar-light
+            .container.d-flex.justify-content-between
+                .btn-group.d-none.d-lg-block
+                    a.btn.btn-outline-secondary(href='/Homepage', role='button')
+                        i.fas.fa-home
+                    a.btn.btn-outline-secondary(href='/Login', role='button')
+                        i.fas.fa-user
+                // Title in Navbar
+                .title Register Page
+
+        // Registration Form
+        .form-container
+            h1 Register
+            form(action='/register', method='POST')
+                .form-group
+                    label(for='username') Username
+                    input#username.form-control(type='text', name='username', required=true)
+                .form-group
+                    label(for='email') Email
+                    input#email.form-control(type='email', name='email', required=true)
+                .form-group
+                    label(for='password') Password
+                    input#password.form-control(type='password', name='password', required=true)
+                button.btn.btn-primary(type='submit') Register
+                a(href='/login', class='btn btn-link') Already have an account? Login Here
