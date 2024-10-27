@@ -1,13 +1,13 @@
 const index = function(req, res) {
-    res.render('index', { title: 'Express', navbar: getNavbar() });
+    res.render('index', { title: 'Express', navbar: getNavbar(), backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg' });
 };
 
 const Login = function(req, res) {
-    res.render('Login', { title: 'Login', navbar: getNavbar() });
+    res.render('Login', { title: 'Login', navbar: getNavbar(), backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg' });
 };
 
 const Register = function(req, res) {
-    res.render('Register', { title: 'Register', navbar: getNavbar() });
+    res.render('Register', { title: 'Register', navbar: getNavbar(), backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg' });
 };
 
 const Homepage = function(req, res) {
@@ -36,7 +36,8 @@ const Homepage = function(req, res) {
         title: 'Rods and Rotors',
         pageHeader: { title: 'Rods and Rotors', strapline: 'Find your next upgrade!' },
         products,
-        navbar: getNavbar()
+        navbar: getNavbar(),
+        backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg' // Pass background image
     });
 };
 
