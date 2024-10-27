@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
-const dbURI = "mongodb+srv://Nathan:Kwagga123@rodsandrotors.hjklg.mongodb.net/RodsandRotors?retryWrites=true&w=majority";
-
+const dbURI = process.env.URI;
 const connectDB = async () => {
     try {
         await mongoose.connect(dbURI, {
