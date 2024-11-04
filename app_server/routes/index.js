@@ -5,7 +5,7 @@ const ctrlMain = require('../Controllers/main');
 router.get('/', ctrlMain.index);
 router.get('/Login', ctrlMain.Login);
 router.get('/Register', ctrlMain.Register);
-router.get('/Homepage', ctrlMain.Homepage);
+router.get('/Homepage', ctrlMain.homelist);
 
 
 module.exports = router;
