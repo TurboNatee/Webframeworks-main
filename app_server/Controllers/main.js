@@ -54,30 +54,42 @@ const Register = async (req, res, next) => {
         const { username, email, password } = req.body;
 
         try {
+            // Check if username already exists
             const existingUser = await User.findOne({ username });
             if (existingUser) return res.status(400).send('Username already taken');
 
+            // Hash the password
             const hashedPassword = await argon2.hash(password);
 
+            // Create and save the new user
             const newUser = new User({ username, email, password: hashedPassword });
             await newUser.save();
 
+            // Automatically log in the new user
             req.login(newUser, (err) => {
                 if (err) return next(err);
+
+                // Set session variables
+                req.session.username = newUser.username; // Store the username in the session
+                req.session.isLoggedIn = true;
+
+                // Redirect to the homepage
                 res.redirect('/Homepage');
             });
         } catch (err) {
             return res.status(500).send('Error saving user');
         }
     } else {
-        const isLoggedIn = !!req.session.username;  // Check if user is logged in
+        // Render the registration page
+        const isLoggedIn = !!req.session.username; // Check if user is logged in
         res.render('Register', {
             title: 'Register',
             backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg',
-            isLoggedIn,  // Pass isLoggedIn to the template
+            isLoggedIn, // Pass isLoggedIn to the template
         });
     }
 };
+
 
 // Render homepage with product list
 const _renderHomepage = function(req, res, responseBody) {
