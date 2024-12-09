@@ -1,8 +1,9 @@
 doctype html
-html
+html(lang="en")
     head
         meta(charset='UTF-8')
         meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        meta(name='description', content='Find your next upgrade at Rods and Rotors! Explore a wide range of car products.')
         link#bootstrap-css(href='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css', rel='stylesheet')
         link(rel='stylesheet', href='https://maxst.icons8.com/vue-static/landings/line-awesome/font-awesome-line-awesome/css/all.min.css')
         script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
@@ -88,15 +89,18 @@ html
             nav.navbar.navbar-expand-lg.navbar-light
                 .container.d-flex.justify-content-between
                     .btn-group.d-none.d-lg-block
-                        a.btn.btn-outline-secondary(href='/Homepage', role='button')
-                            i.fas.fa-home
-                        a.btn.btn-outline-secondary(href='/Login', role='button')
-                            i.fas.fa-user
+                        if !isLoggedIn
+                            a.btn.btn-outline-secondary(href='/Homepage', role='button')
+                                i.fas.fa-home
+                            a.btn.btn-outline-secondary(href='/Login', role='button')
+                                i.fas.fa-user
                     // Title in Navbar
                     .title #{pageHeader.title}
 
                     // Logout button on the right
                     if isLoggedIn
+                        a.btn.btn-outline-secondary(href='/Homepage', role='button')
+                            i.fas.fa-home
                         .ml-auto
                             i.fas.fa-tachometer-alt(style="font-size: 2rem; color: #dc3545;")
                             a.btn.btn-danger(href='/logout') Logout
@@ -106,5 +110,5 @@ html
             app-home-list Loading
 
     block scripts
-    script(src='/build/polyfills-FFHMD2TL.js')
-    script(src='/build/main-TZJNWXTP.js')
+        script(src='/build/polyfills-FFHMD2TL.js')
+        script(src='/build/main-TZJNWXTP.js')

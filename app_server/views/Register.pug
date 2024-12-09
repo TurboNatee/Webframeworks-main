@@ -93,6 +93,9 @@ html
                         i.fas.fa-home
                     a.btn.btn-outline-secondary(href='/Login', role='button')
                         i.fas.fa-user
+                // Conditionally render logout button
+                if user
+                    a.btn.btn-outline-danger(href='/logout', role='button') Logout
                 // Title in Navbar
                 .title Register Page
 

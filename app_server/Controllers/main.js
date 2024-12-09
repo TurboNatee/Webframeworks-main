@@ -1,156 +1,123 @@
 const request = require('request');
 const argon2 = require('argon2');
-const User = require('../../app_api/Models/user'); // Import the User model
+const User = require('../../app_api/Models/user');
+const passport = require('passport');
 const apiOptions = {
-    server: 'http://localhost:3000',
+    server: process.env.NODE_ENV === 'production' ? 'https://wsrender.onrender.com' : 'http://localhost:3000',
 };
 
-if (process.env.NODE_ENV === 'production') {
-    apiOptions.server = 'https://wsrender.onrender.com';
-}
-
-const index = function(req, res) {
+// Render index page
+const index = (req, res) => {
+    const isLoggedIn = !!req.session.username;  // Check if user is logged in
     res.render('index', {
         title: 'Express',
-        navbar: getNavbar(),
         backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg',
+        isLoggedIn,  // Pass isLoggedIn to the template
     });
 };
 
-const passport = require('passport');
-
-const Login = async function(req, res, next) {
+// Handle login
+const Login = (req, res, next) => {
     if (req.method === 'POST') {
         passport.authenticate('local', (err, user, info) => {
             if (err) {
-                return next(err); // If there's an error, pass it to the next middleware
+                return next(err);
             }
 
             if (!user) {
-                // If no user found or invalid credentials, handle the error
-                return res.status(400).send(info.message);  // info.message is from the LocalStrategy callback
+                return res.status(400).send(info.message);
             }
 
-            // Successfully authenticated, store user session
             req.login(user, (err) => {
                 if (err) {
                     return next(err);
                 }
-
-                console.log('User logged in:', user.username);
-                res.redirect('/Homepage');  // Redirect to homepage
+                // Store the username or user ID in the session
+                req.session.username = user.username;
+                req.session.isLoggedIn = true;
+                res.redirect('/Homepage');
             });
-        })(req, res, next);  // Pass the request to passport.authenticate
+        })(req, res, next);
     } else {
+        const isLoggedIn = !!req.session.username;  // Check if user is logged in
         res.render('Login', {
             title: 'Login',
-            navbar: getNavbar(),
             backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg',
+            isLoggedIn,  // Pass isLoggedIn to the template
         });
     }
 };
 
-
-
-
-const Register = async function(req, res, next) {
+// Handle registration
+const Register = async (req, res, next) => {
     if (req.method === 'POST') {
         const { username, email, password } = req.body;
 
         try {
-            // Check if the username already exists
             const existingUser = await User.findOne({ username });
+            if (existingUser) return res.status(400).send('Username already taken');
 
-            if (existingUser) {
-                return res.status(400).send('Username already taken');
-            }
-
-            // Hash the password using argon2
             const hashedPassword = await argon2.hash(password);
 
-            // Create the new user
-            const newUser = new User({
-                username,
-                email,
-                password: hashedPassword,  // Store the hashed password
-            });
-
-            // Save the new user to the database
+            const newUser = new User({ username, email, password: hashedPassword });
             await newUser.save();
 
-            // Automatically log in the user after registration
             req.login(newUser, (err) => {
-                if (err) {
-                    return next(err);
-                }
-
-                console.log('User registered and logged in:', newUser.username);
-                // Redirect to the homepage or desired page after successful registration
+                if (err) return next(err);
                 res.redirect('/Homepage');
             });
-
         } catch (err) {
-            console.error('Error in Register:', err);  // Log the full error for debugging
             return res.status(500).send('Error saving user');
         }
     } else {
+        const isLoggedIn = !!req.session.username;  // Check if user is logged in
         res.render('Register', {
             title: 'Register',
-            navbar: getNavbar(),
             backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg',
+            isLoggedIn,  // Pass isLoggedIn to the template
         });
     }
 };
 
+// Render homepage with product list
 const _renderHomepage = function(req, res, responseBody) {
     const products = Array.isArray(responseBody) ? responseBody : [];
-    const isLoggedIn = req.session.userId ? true : false;
+    const isLoggedIn = !!req.session.username;
     res.render('Homepage', {
         title: 'Rods and Rotors',
         pageHeader: { title: 'Rods and Rotors', strapline: 'Find your next upgrade!' },
         products,
-        navbar: getNavbar(),
         backgroundImage: 'https://wallpapercave.com/wp/wp3731551.jpg',
-        isLoggedIn
+        isLoggedIn  // Pass isLoggedIn to the template
     });
 };
 
-const homelist = function(req, res) {
+// Fetch and display homepage products
+const homelist = (req, res) => {
     const path = '/api/homepage';
-    const requestOptions = {
-        url: apiOptions.server + path,
-        method: 'GET',
-        json: {},
-    };
-    request(requestOptions, (err, response, body) => {
+    request({ url: apiOptions.server + path, method: 'GET', json: {} }, (err, response, body) => {
         _renderHomepage(req, res, body);
     });
 };
 
-// Function to return navbar links and titles
-const getNavbar = () => {
-    return [
-        { title: 'Home', link: '/' },
-        { title: 'Login', link: '/login' },
-        { title: 'Register', link: '/register' },
-        { title: 'Products', link: '/products' },
-    ];
-};
+// Navbar generation based on session state
+
+
+// Logout user and destroy session
 const Logout = (req, res) => {
     req.session.destroy((err) => {
         if (err) {
+            console.error('Error logging out:', err);
             return res.status(500).send('Error logging out');
         }
-        res.redirect('/login');  // Redirect to login page after logout
+        res.redirect('/login');
     });
 };
-
-
 
 module.exports = {
     index,
     Login,
     Register,
     homelist,
-    Logout
+    Logout,
 };
