@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const ctrlMain = require('../controllers/main');  // Correct path to your controller
+const ctrlMain = require('../Controllers/main.js');  // Correct path to your controller
 
 // Handle GET requests for login and register
 router.get('/', ctrlMain.index);
