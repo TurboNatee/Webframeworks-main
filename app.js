@@ -42,7 +42,6 @@ app.use(cors({
   methods: 'GET, POST, PUT, DELETE',
   credentials: true,
 }));
-
 app.use('/api', function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');  // Allow all origins
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
