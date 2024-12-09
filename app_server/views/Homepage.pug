@@ -95,20 +95,16 @@ html
                     // Title in Navbar
                     .title #{pageHeader.title}
 
-        // Products
+                    // Logout button on the right
+                    if isLoggedIn
+                        .ml-auto
+                            i.fas.fa-tachometer-alt(style="font-size: 2rem; color: #dc3545;")
+                            a.btn.btn-danger(href='/logout') Logout
+
+        // Angular App Placeholder
         .container
-            h1 #{pageHeader.strapline}
-            .row
-                each product in products
-                    .col-12.col-sm-12.col-md-6.col-lg-4.col-xl-4.mt-4
-                        .card.shadow
-                            .card-body.text-center
-                                h3.text-warning SALE!
-                                a(href='#')
-                                    img.card-img-top(src=product.imageUrl, alt=product.title)
-                                a.text-reset(href='#')
-                                    h3.card-title.display-4= product.title
-                                h6
-                                    | $#{product.price}
-                                    del.text-muted.ml-2 $#{product.oldPrice}
-                                a.btn.btn-dark.my-2(href='#', role='button') Add to Cart
+            app-home-list Loading
+
+    block scripts
+    script(src='/build/polyfills-FFHMD2TL.js')
+    script(src='/build/main-IEBVCQWR.js')
