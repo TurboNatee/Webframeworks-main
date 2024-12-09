@@ -16,8 +16,8 @@ const allowedOrigins = ['http://localhost:4200', 'https://localhost'];
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
-var privateKey = fs.readFileSync('./sslcert/key.pem', 'utf8');
-var certificate = fs.readFileSync('./sslcert/cert.pem', 'utf8');
+var privateKey = fs.readFileSync('sslcert/key.pem', 'utf8');
+var certificate = fs.readFileSync('sslcert/cert.pem', 'utf8');
 var credentials = { key: privateKey, cert: certificate };
 var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
@@ -44,8 +44,9 @@ app.use(cors({
 }));
 
 app.use('/api', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.header('Access-Control-Allow-Origin', '*');  // Allow all origins
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');  // Add other methods if needed
   next();
 });
 
