@@ -2,25 +2,48 @@ var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
 var path = require('path');
-const User = require('./app_api/Models/user');
+const User = require('./app_api/Models/user');  // Ensure User model is correctly imported
+const Product = require('./app_api/Models/Schema');  // Ensure products model is imported
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-require('./app_api/Models/db.js');
+require('./app_api/Models/db.js');  // Ensure DB connection is established
 var indexRouter = require('./app_server/routes/index');
-var apiRouter = require('./app_api/routes/index'); // Import your API routes
+var apiRouter = require('./app_api/routes/index');  // Import your API routes
 var app = express();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const argon2 = require('argon2');
+const allowedOrigins = ['http://localhost:4200', 'https://localhost'];
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey = fs.readFileSync('./sslcert/key.pem', 'utf8');
+var certificate = fs.readFileSync('./sslcert/cert.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+httpServer.listen(8000);
+httpsServer.listen(443);
 
 app.set('views', path.join(__dirname, 'app_server', 'views'));
 app.set('view engine', 'pug');
 const cors = require('cors');
-app.use(cors());
+
+// Allow CORS from your Angular frontend
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy does not allow this origin'), false);
+    }
+  },
+  methods: 'GET, POST, PUT, DELETE',
+  credentials: true,  // Allow credentials (cookies, sessions)
+}));
 
 app.use('/api', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin',
-      'http://localhost:4200');
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
@@ -34,10 +57,8 @@ app.use(express.static(path.join(__dirname, 'app_public')));
 
 // Redirect to homepage on root access
 app.get('/', (req, res) => {
-  res.redirect('/Homepage'); //
+  res.redirect('/Homepage');
 });
-
-
 
 // Body parser for form data
 app.use(express.urlencoded({ extended: true }));
@@ -47,7 +68,7 @@ app.use(session({
   secret: 'yourSecretKey',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }  // Set to true if you're using HTTPS
+  cookie: { secure: true }  // Set to true if you're using HTTPS
 }));
 
 app.use(passport.initialize());
@@ -63,11 +84,8 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
@@ -108,6 +126,8 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   }
 });
+
+// Authentication middleware
 function isAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -115,6 +135,7 @@ function isAuthenticated(req, res, next) {
   res.redirect('/Login');  // Redirect to login page if not authenticated
 }
 
+// Route for homepage (requires authentication)
 app.get('/Homepage', isAuthenticated, (req, res) => {
   res.render('Homepage', {
     title: 'Homepage',
